@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Placar de Wrestling</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app" id="app">
+    <header>
+      <h1>Placar de Wrestling • Livre/Greco </h1>
+      <div class="toolbar">
+        <button class="btn" id="btnFullscreen">Tela cheia</button>
+        <button class="btn secondary" id="btnSwap">Trocar lados</button>
+        <button class="btn warn" id="btnReset">Resetar luta</button>
+      </div>
+    </header>
+
+    <div class="grid">
+      <!-- RED SIDE -->
+      <section class="panel side" id="redPanel">
+        <div class="name">
+          <span class="colorTag" style="background:var(--red)"></span>
+          <input id="redName" value="Vermelho" aria-label="Nome atleta vermelho" />
+        </div>
+        <div class="score" id="redScoreBox">
+          <div class="points" id="redPoints">0</div>
+          <div class="last" id="redLast">Último ponto: —</div>
+        </div>
+        <div class="controls">
+          <button class="btn" data-act="score" data-side="red" data-val="1">+1</button>
+          <button class="btn" data-act="score" data-side="red" data-val="2">+2</button>
+          <button class="btn" data-act="score" data-side="red" data-val="4">+4</button>
+          <button class="btn" data-act="score" data-side="red" data-val="5">+5</button>
+          <button class="btn secondary" data-act="deduct" data-side="red" data-val="1">-1</button>
+          <button class="btn secondary" data-act="caution" data-side="red">Caut.</button>
+          <button class="btn secondary" data-act="undoSide" data-side="red">Desfazer</button>
+          <button class="btn good" data-act="fall" data-side="red">Queda</button>
+        </div>
+        <div class="mini">
+          <div class="tag">Cautelas: <b id="redCaution">0</b></div>
+          <div class="tag">Maior Ação: <b id="redHi">0</b></div>
+        </div>
+      </section>
+
+      <!-- CENTER -->
+      <section class="panel center" id="centerPanel">
+        <div class="timer">
+          <div class="time" id="time" title="Clique para editar (atalho T)">03:00</div>
+          <div class="period">
+            Período: <b id="period">1</b> / 2 • Dif. técnica:
+            <input
+              id="techGap"
+              type="number"
+              min="1"
+              value="10"
+              style="width:64px;background:#0c1328;border:1px solid #2a375e;color:#fff;border-radius:8px;padding:4px 6px"
+            />
+            pontos
+          </div>
+          <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+            <button class="btn good" id="btnStart">Iniciar</button>
+            <button class="btn" id="btnPause">Pausar</button>
+            <button class="btn secondary" id="btnResetTimer">Zerar tempo</button>
+            <button class="btn" id="btnNextPeriod">Próximo período</button>
+          </div>
+        </div>
+        <div class="criteria" id="criteria">
+          Critério: maior valor de ação → menos cautelas → quem marcou por último.
+        </div>
+        <div class="criteria" id="status"></div>
+      </section>
+
+      <!-- BLUE SIDE -->
+      <section class="panel side" id="bluePanel">
+        <div class="name">
+          <span class="colorTag" style="background:var(--blue)"></span>
+          <input id="blueName" value="Azul" aria-label="Nome atleta azul" />
+        </div>
+        <div class="score" id="blueScoreBox">
+          <div class="points" id="bluePoints">0</div>
+          <div class="last" id="blueLast">Último ponto: —</div>
+        </div>
+        <div class="controls">
+          <button class="btn" data-act="score" data-side="blue" data-val="1">+1</button>
+          <button class="btn" data-act="score" data-side="blue" data-val="2">+2</button>
+          <button class="btn" data-act="score" data-side="blue" data-val="4">+4</button>
+          <button class="btn" data-act="score" data-side="blue" data-val="5">+5</button>
+          <button class="btn secondary" data-act="deduct" data-side="blue" data-val="1">-1</button>
+          <button class="btn secondary" data-act="caution" data-side="blue">Caut.</button>
+          <button class="btn secondary" data-act="undoSide" data-side="blue">Desfazer</button>
+          <button class="btn good" data-act="fall" data-side="blue">Queda</button>
+        </div>
+        <div class="mini">
+          <div class="tag">Cautelas: <b id="blueCaution">0</b></div>
+          <div class="tag">Maior Ação: <b id="blueHi">0</b></div>
+        </div>
+      </section>
+    </div>
+
+    <div class="footer">
+      <div>
+        <span class="kbd">Espaço</span> Iniciar/Pausar •
+        <span class="kbd">R</span> Zerar tempo •
+        <span class="kbd">P</span> Próx. período •
+        <span class="kbd">U</span> Desfazer
+      </div>
+      <div>
+        | Vermelho:
+        <span class="kbd">A</span>+1
+        <span class="kbd">S</span>+2
+        <span class="kbd">D</span>+4
+        <span class="kbd">F</span>+5
+        • Azul:
+        <span class="kbd">J</span>+1
+        <span class="kbd">K</span>+2
+        <span class="kbd">L</span>+4
+        <span class="kbd">;</span>+5
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
