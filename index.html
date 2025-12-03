@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Placar de Wrestling</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="scoreboard">
+        <h1>Placar de Wrestling</h1>
+        
+        <!-- Timer Section -->
+        <div class="timer-section">
+            <div class="timer-display" id="timerDisplay">02:00</div>
+            <div class="timer-controls">
+                <button id="startBtn" onclick="startTimer()">Iniciar</button>
+                <button id="pauseBtn" onclick="pauseTimer()">Pausar</button>
+                <button id="resetBtn" onclick="resetTimer()">Resetar</button>
+            </div>
+        </div>
+
+        <!-- Editable Timer Settings -->
+        <div class="timer-settings">
+            <h3>Configurar Tempo</h3>
+            <div class="timer-presets">
+                <button class="preset-btn" onclick="setTimerPreset(60)">1:00</button>
+                <button class="preset-btn active" onclick="setTimerPreset(120)">2:00</button>
+                <button class="preset-btn" onclick="setTimerPreset(180)">3:00</button>
+            </div>
+            <div class="custom-timer">
+                <label for="customMinutes">Minutos:</label>
+                <input type="number" id="customMinutes" min="0" max="59" value="2">
+                <label for="customSeconds">Segundos:</label>
+                <input type="number" id="customSeconds" min="0" max="59" value="0">
+                <button onclick="setCustomTimer()">Aplicar</button>
+            </div>
+        </div>
+
+        <!-- Period Section -->
+        <div class="period-section">
+            <span>Período: </span>
+            <span id="periodDisplay">1</span>
+            <button onclick="changePeriod(-1)">-</button>
+            <button onclick="changePeriod(1)">+</button>
+        </div>
+
+        <!-- Wrestling Style Selector -->
+        <div class="style-selector">
+            <label for="wrestlingStyle">Estilo:</label>
+            <select id="wrestlingStyle" onchange="changeStyle()">
+                <option value="freestyle">Estilo Livre</option>
+                <option value="greco">Greco-Romana</option>
+            </select>
+        </div>
+
+        <!-- Scoreboard -->
+        <div class="scores-container">
+            <div class="player red">
+                <div class="player-color"></div>
+                <input type="text" class="player-name" placeholder="Vermelho" id="player1Name">
+                <div class="score" id="score1">0</div>
+                <div class="score-buttons">
+                    <button onclick="addScore(1, 1)">+1</button>
+                    <button onclick="addScore(1, 2)">+2</button>
+                    <button onclick="addScore(1, 4)">+4</button>
+                    <button onclick="addScore(1, 5)">+5</button>
+                    <button onclick="addScore(1, -1)">-1</button>
+                </div>
+            </div>
+            <div class="player blue">
+                <div class="player-color"></div>
+                <input type="text" class="player-name" placeholder="Azul" id="player2Name">
+                <div class="score" id="score2">0</div>
+                <div class="score-buttons">
+                    <button onclick="addScore(2, 1)">+1</button>
+                    <button onclick="addScore(2, 2)">+2</button>
+                    <button onclick="addScore(2, 4)">+4</button>
+                    <button onclick="addScore(2, 5)">+5</button>
+                    <button onclick="addScore(2, -1)">-1</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reset Match Button -->
+        <div class="match-controls">
+            <button class="reset-match" onclick="resetMatch()">Reiniciar Partida</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

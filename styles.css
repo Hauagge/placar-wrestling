@@ -1,0 +1,397 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.scoreboard {
+    background: #0f0f23;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    max-width: 900px;
+    width: 100%;
+    color: white;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 2rem;
+    color: #f0f0f0;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+}
+
+/* Timer Section */
+.timer-section {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.timer-display {
+    font-size: 4rem;
+    font-weight: bold;
+    font-family: 'Courier New', Courier, monospace;
+    color: #00ff88;
+    text-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+    margin-bottom: 15px;
+}
+
+.timer-controls {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.timer-controls button {
+    padding: 12px 25px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: bold;
+}
+
+#startBtn {
+    background: #00c853;
+    color: white;
+}
+
+#startBtn:hover {
+    background: #00e676;
+    transform: scale(1.05);
+}
+
+#pauseBtn {
+    background: #ff9800;
+    color: white;
+}
+
+#pauseBtn:hover {
+    background: #ffb300;
+    transform: scale(1.05);
+}
+
+#resetBtn {
+    background: #ff5252;
+    color: white;
+}
+
+#resetBtn:hover {
+    background: #ff6e6e;
+    transform: scale(1.05);
+}
+
+/* Timer Settings */
+.timer-settings {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.timer-settings h3 {
+    text-align: center;
+    margin-bottom: 15px;
+    color: #ffd700;
+    font-size: 1.2rem;
+}
+
+.timer-presets {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.preset-btn {
+    padding: 10px 20px;
+    font-size: 1rem;
+    border: 2px solid #666;
+    background: transparent;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.preset-btn:hover {
+    border-color: #ffd700;
+    background: rgba(255, 215, 0, 0.1);
+}
+
+.preset-btn.active {
+    border-color: #ffd700;
+    background: rgba(255, 215, 0, 0.2);
+    color: #ffd700;
+}
+
+.custom-timer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.custom-timer label {
+    color: #aaa;
+}
+
+.custom-timer input {
+    width: 60px;
+    padding: 8px;
+    font-size: 1rem;
+    border: 1px solid #444;
+    border-radius: 5px;
+    background: #1a1a2e;
+    color: white;
+    text-align: center;
+}
+
+.custom-timer input:focus {
+    outline: none;
+    border-color: #ffd700;
+}
+
+.custom-timer button {
+    padding: 8px 20px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    background: #ffd700;
+    color: #1a1a2e;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.custom-timer button:hover {
+    background: #ffed4a;
+    transform: scale(1.05);
+}
+
+/* Period Section */
+.period-section {
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+}
+
+.period-section button {
+    padding: 5px 15px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    background: #666;
+    color: white;
+    cursor: pointer;
+    margin: 0 5px;
+    transition: background 0.3s ease;
+}
+
+.period-section button:hover {
+    background: #888;
+}
+
+#periodDisplay {
+    font-weight: bold;
+    color: #ffd700;
+    margin: 0 10px;
+}
+
+/* Style Selector */
+.style-selector {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.style-selector label {
+    margin-right: 10px;
+    color: #aaa;
+}
+
+.style-selector select {
+    padding: 10px 20px;
+    font-size: 1rem;
+    border: 1px solid #444;
+    border-radius: 5px;
+    background: #1a1a2e;
+    color: white;
+    cursor: pointer;
+}
+
+.style-selector select:focus {
+    outline: none;
+    border-color: #ffd700;
+}
+
+/* Scores Container */
+.scores-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.player {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+}
+
+.player.red {
+    border-left: 5px solid #ff4444;
+}
+
+.player.blue {
+    border-left: 5px solid #4444ff;
+}
+
+.player-color {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin: 0 auto 10px;
+}
+
+.player.red .player-color {
+    background: #ff4444;
+}
+
+.player.blue .player-color {
+    background: #4444ff;
+}
+
+.player-name {
+    width: 100%;
+    padding: 10px;
+    font-size: 1.1rem;
+    border: 1px solid #444;
+    border-radius: 5px;
+    background: transparent;
+    color: white;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.player-name:focus {
+    outline: none;
+    border-color: #ffd700;
+}
+
+.score {
+    font-size: 5rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.player.red .score {
+    color: #ff4444;
+}
+
+.player.blue .score {
+    color: #4444ff;
+}
+
+.score-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.score-buttons button {
+    padding: 10px 15px;
+    font-size: 0.9rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: bold;
+}
+
+.player.red .score-buttons button {
+    background: #ff4444;
+    color: white;
+}
+
+.player.red .score-buttons button:hover {
+    background: #ff6666;
+    transform: scale(1.05);
+}
+
+.player.blue .score-buttons button {
+    background: #4444ff;
+    color: white;
+}
+
+.player.blue .score-buttons button:hover {
+    background: #6666ff;
+    transform: scale(1.05);
+}
+
+/* Match Controls */
+.match-controls {
+    text-align: center;
+}
+
+.reset-match {
+    padding: 15px 40px;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 8px;
+    background: #666;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.reset-match:hover {
+    background: #888;
+    transform: scale(1.05);
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .scores-container {
+        grid-template-columns: 1fr;
+    }
+
+    .timer-display {
+        font-size: 3rem;
+    }
+
+    .score {
+        font-size: 3.5rem;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    .timer-controls button {
+        padding: 10px 15px;
+        font-size: 0.9rem;
+    }
+
+    .custom-timer {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
