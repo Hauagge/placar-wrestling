@@ -1,0 +1,429 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    min-height: 100vh;
+    color: #fff;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+header h1 {
+    font-size: 2.5rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    margin-bottom: 15px;
+}
+
+.style-selector {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.style-selector label {
+    font-size: 1.2rem;
+}
+
+.style-selector select {
+    padding: 10px 20px;
+    font-size: 1.1rem;
+    border-radius: 8px;
+    border: none;
+    background: #2c3e50;
+    color: #fff;
+    cursor: pointer;
+}
+
+.match-info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 50px;
+    margin-bottom: 30px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+}
+
+.period-display {
+    font-size: 1.5rem;
+}
+
+.timer-display {
+    font-size: 4rem;
+    font-weight: bold;
+    font-family: 'Courier New', monospace;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+}
+
+.scoreboard {
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.wrestler {
+    flex: 1;
+    padding: 25px;
+    border-radius: 20px;
+    text-align: center;
+}
+
+.red-corner {
+    background: linear-gradient(145deg, #c0392b, #922b21);
+    box-shadow: 0 10px 30px rgba(192, 57, 43, 0.4);
+}
+
+.blue-corner {
+    background: linear-gradient(145deg, #2980b9, #1a5276);
+    box-shadow: 0 10px 30px rgba(41, 128, 185, 0.4);
+}
+
+.wrestler-header {
+    margin-bottom: 20px;
+}
+
+.wrestler-name {
+    width: 100%;
+    padding: 12px;
+    font-size: 1.3rem;
+    text-align: center;
+    border: none;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    margin-bottom: 10px;
+}
+
+.wrestler-name::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.corner-label {
+    display: block;
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+}
+
+.score-display {
+    font-size: 8rem;
+    font-weight: bold;
+    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+    margin: 20px 0;
+    line-height: 1;
+}
+
+.score-controls {
+    margin-bottom: 20px;
+}
+
+.points-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.btn-score {
+    padding: 15px 25px;
+    font-size: 1.3rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.9);
+    color: #333;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-score:hover {
+    transform: scale(1.1);
+    background: #fff;
+}
+
+.btn-minus {
+    padding: 10px 20px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.3);
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-minus:hover {
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.cautions {
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+}
+
+.btn-caution {
+    padding: 8px 15px;
+    font-size: 0.9rem;
+    border: none;
+    border-radius: 5px;
+    background: #f39c12;
+    color: #fff;
+    cursor: pointer;
+    margin-left: 10px;
+    transition: all 0.3s ease;
+}
+
+.btn-caution:hover {
+    background: #e67e22;
+}
+
+.passivity {
+    margin-top: 10px;
+}
+
+.btn-passivity {
+    padding: 12px 25px;
+    font-size: 1rem;
+    font-weight: bold;
+    border: 3px solid #f39c12;
+    border-radius: 10px;
+    background: transparent;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-passivity:hover {
+    background: rgba(243, 156, 18, 0.3);
+}
+
+.btn-passivity.active {
+    background: #f39c12;
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgba(243, 156, 18, 0.7);
+    }
+    50% {
+        box-shadow: 0 0 0 15px rgba(243, 156, 18, 0);
+    }
+}
+
+.timer-controls {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.btn-timer {
+    padding: 15px 35px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 10px;
+    background: #27ae60;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-timer:hover {
+    background: #2ecc71;
+    transform: translateY(-2px);
+}
+
+.match-controls {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.btn-match {
+    padding: 15px 30px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-fall {
+    background: #8e44ad;
+}
+
+.btn-fall:hover {
+    background: #9b59b6;
+}
+
+.btn-technical {
+    background: #e74c3c;
+}
+
+.btn-technical:hover {
+    background: #ec7063;
+}
+
+.btn-reset {
+    background: #34495e;
+}
+
+.btn-reset:hover {
+    background: #4a6785;
+}
+
+.result-display {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.95);
+    padding: 50px;
+    border-radius: 20px;
+    text-align: center;
+    z-index: 1000;
+    box-shadow: 0 0 50px rgba(255, 255, 255, 0.3);
+}
+
+.result-display h2 {
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+    color: #f1c40f;
+}
+
+.btn-close {
+    padding: 15px 40px;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 10px;
+    background: #3498db;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-close:hover {
+    background: #5dade2;
+}
+
+footer {
+    text-align: center;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    margin-top: 20px;
+}
+
+footer p {
+    font-size: 1rem;
+    margin-bottom: 15px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.scoring-guide {
+    text-align: left;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.scoring-guide h3 {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+    color: #f1c40f;
+}
+
+.scoring-guide ul {
+    list-style: none;
+    padding-left: 10px;
+}
+
+.scoring-guide li {
+    padding: 5px 0;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 1.8rem;
+    }
+
+    .match-info {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .timer-display {
+        font-size: 3rem;
+    }
+
+    .scoreboard {
+        flex-direction: column;
+    }
+
+    .score-display {
+        font-size: 5rem;
+    }
+
+    .timer-controls,
+    .match-controls {
+        flex-wrap: wrap;
+    }
+
+    .btn-timer,
+    .btn-match {
+        flex: 1 1 45%;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 10px;
+    }
+
+    header h1 {
+        font-size: 1.4rem;
+    }
+
+    .timer-display {
+        font-size: 2.5rem;
+    }
+
+    .score-display {
+        font-size: 4rem;
+    }
+
+    .btn-score {
+        padding: 10px 15px;
+        font-size: 1rem;
+    }
+
+    .points-row {
+        flex-wrap: wrap;
+    }
+}

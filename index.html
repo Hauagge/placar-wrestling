@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Placar Wrestling - Luta Livre e Greco-Romana</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Placar de Wrestling</h1>
+            <div class="style-selector">
+                <label for="wrestling-style">Estilo:</label>
+                <select id="wrestling-style">
+                    <option value="freestyle">Luta Livre (Freestyle)</option>
+                    <option value="greco">Greco-Romana</option>
+                </select>
+            </div>
+        </header>
+
+        <div class="match-info">
+            <div class="period-display">
+                <span>Período: </span>
+                <span id="current-period">1</span>
+                <span>/</span>
+                <span id="total-periods">2</span>
+            </div>
+            <div class="timer-display">
+                <span id="timer">03:00</span>
+            </div>
+        </div>
+
+        <div class="scoreboard">
+            <!-- Red Corner (Vermelho) -->
+            <div class="wrestler red-corner">
+                <div class="wrestler-header">
+                    <input type="text" id="red-name" class="wrestler-name" placeholder="Atleta Vermelho" maxlength="30">
+                    <span class="corner-label">VERMELHO</span>
+                </div>
+                <div class="score-display">
+                    <span id="red-score">0</span>
+                </div>
+                <div class="score-controls">
+                    <div class="points-row">
+                        <button class="btn-score" onclick="addPoints('red', 1)">+1</button>
+                        <button class="btn-score" onclick="addPoints('red', 2)">+2</button>
+                        <button class="btn-score" onclick="addPoints('red', 4)">+4</button>
+                        <button class="btn-score" onclick="addPoints('red', 5)">+5</button>
+                    </div>
+                    <div class="points-row">
+                        <button class="btn-minus" onclick="addPoints('red', -1)">-1</button>
+                        <button class="btn-minus" onclick="addPoints('red', -2)">-2</button>
+                    </div>
+                </div>
+                <div class="cautions">
+                    <span>Advertências: </span>
+                    <span id="red-cautions">0</span>
+                    <button class="btn-caution" onclick="addCaution('red')">+ Advertência</button>
+                </div>
+                <div class="passivity">
+                    <button class="btn-passivity" id="red-passivity-btn" onclick="togglePassivity('red')">
+                        Passividade
+                    </button>
+                </div>
+            </div>
+
+            <!-- Blue Corner (Azul) -->
+            <div class="wrestler blue-corner">
+                <div class="wrestler-header">
+                    <input type="text" id="blue-name" class="wrestler-name" placeholder="Atleta Azul" maxlength="30">
+                    <span class="corner-label">AZUL</span>
+                </div>
+                <div class="score-display">
+                    <span id="blue-score">0</span>
+                </div>
+                <div class="score-controls">
+                    <div class="points-row">
+                        <button class="btn-score" onclick="addPoints('blue', 1)">+1</button>
+                        <button class="btn-score" onclick="addPoints('blue', 2)">+2</button>
+                        <button class="btn-score" onclick="addPoints('blue', 4)">+4</button>
+                        <button class="btn-score" onclick="addPoints('blue', 5)">+5</button>
+                    </div>
+                    <div class="points-row">
+                        <button class="btn-minus" onclick="addPoints('blue', -1)">-1</button>
+                        <button class="btn-minus" onclick="addPoints('blue', -2)">-2</button>
+                    </div>
+                </div>
+                <div class="cautions">
+                    <span>Advertências: </span>
+                    <span id="blue-cautions">0</span>
+                    <button class="btn-caution" onclick="addCaution('blue')">+ Advertência</button>
+                </div>
+                <div class="passivity">
+                    <button class="btn-passivity" id="blue-passivity-btn" onclick="togglePassivity('blue')">
+                        Passividade
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="timer-controls">
+            <button class="btn-timer" id="start-stop-btn" onclick="toggleTimer()">Iniciar</button>
+            <button class="btn-timer" onclick="resetTimer()">Resetar Tempo</button>
+            <button class="btn-timer" onclick="nextPeriod()">Próximo Período</button>
+        </div>
+
+        <div class="match-controls">
+            <button class="btn-match btn-fall" onclick="declareFall()">Encostou (Fall)</button>
+            <button class="btn-match btn-technical" onclick="declareTechnicalFall()">Superioridade Técnica</button>
+            <button class="btn-match btn-reset" onclick="resetMatch()">Nova Luta</button>
+        </div>
+
+        <div class="result-display" id="result-display" style="display: none;">
+            <h2 id="result-text"></h2>
+            <button class="btn-close" onclick="closeResult()">Fechar</button>
+        </div>
+
+        <footer>
+            <p>Placar Wrestling - Luta Livre e Greco-Romana</p>
+            <div class="scoring-guide">
+                <h3>Guia de Pontuação:</h3>
+                <ul>
+                    <li><strong>1 ponto:</strong> Takedown, reversão, escape</li>
+                    <li><strong>2 pontos:</strong> Takedown com exposição, rolamento</li>
+                    <li><strong>4 pontos:</strong> Grande amplitude com exposição</li>
+                    <li><strong>5 pontos:</strong> Grande amplitude direta ao solo</li>
+                </ul>
+            </div>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
