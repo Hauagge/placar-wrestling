@@ -83,16 +83,14 @@ header h1 {
 }
 
 /* botão menor para short clock */
-.btn-short {
+.btn-short,
+.btn-short-cancel {
   padding: 6px 10px;
   font-size: 12px;
   grid-column: span 2;
 }
 
 .btn-short-cancel {
-  padding: 6px 10px;
-  font-size: 12px;
-  grid-column: span 2;
   opacity: 0.9;
 }
 

@@ -1,5 +1,6 @@
 (function () {
-  const TIME_IN_SECONDS = 300; // 5 minutos
+  const PERIOD_SECONDS = 180; // 3 minutos por período
+  const REST_SECONDS = 30;    // descanso entre períodos (30s)
 
   const els = {
     redPoints: document.getElementById('redPoints'),
@@ -30,10 +31,11 @@
     blue: { score: 0, cautions: 0, hi: 0 },
     lastScorer: null, // 'red' | 'blue'
     period: 1,
-    seconds: TIME_IN_SECONDS,
+    seconds: PERIOD_SECONDS,
     running: false,
     timerId: null,
     history: [], // stack de ações para desfazer
+    isRest: false, // está em tempo de descanso entre períodos
   };
 
   // short clock (passividade) separado do tempo principal
@@ -79,7 +81,7 @@
         ? 'Vermelho'
         : '—');
 
-    // superioridade técnica
+    // superioridade técnica (só mostra se não estiver em descanso nem com short clock ativo)
     const gap = Math.abs(state.red.score - state.blue.score);
     const tech = Number(els.techGap.value || 10);
 
@@ -87,7 +89,7 @@
       b.classList.remove('winner', 'super'),
     );
 
-    if (gap >= tech) {
+    if (!state.isRest && shortClock.side === null && gap >= tech) {
       if (state.red.score > state.blue.score) {
         els.redScoreBox.classList.add('winner', 'super');
       } else {
@@ -95,15 +97,6 @@
       }
       els.status.textContent =
         'Vitória por superioridade técnica (diferença ≥ ' + tech + ').';
-    } else {
-      // não limpa status se já tiver alguma mensagem de short clock/luta
-      if (!els.status.textContent.startsWith('Tempo de passividade')) {
-        // só limpa se não for mensagem de short clock
-        if (!els.status.textContent.startsWith('Fim do')) {
-          // mantém mensagens de fim de luta/período
-          els.status.textContent = '';
-        }
-      }
     }
 
     // render short clock
@@ -142,12 +135,14 @@
     s.hi = Math.max(s.hi, val);
     state.lastScorer = side;
 
-      if (shortClock.side === side) {
-    els.status.textContent = `Short clock cancelado: ${
-      side === 'red' ? 'Vermelho' : 'Azul'
-    } pontuou durante o tempo de passividade.`;
-    stopShortClock();
-  }
+    // se o atleta em short clock pontuar, cancela o short
+    if (shortClock.side === side) {
+      els.status.textContent = `Short clock cancelado: ${
+        side === 'red' ? 'Vermelho' : 'Azul'
+      } pontuou durante o tempo de passividade.`;
+      stopShortClock();
+    }
+
     render();
   }
 
@@ -194,7 +189,7 @@
 
     if (last) {
       const snap = JSON.parse(last).snapshot;
-      ['red', 'blue', 'lastScorer', 'period', 'seconds', 'running'].forEach(
+      ['red', 'blue', 'lastScorer', 'period', 'seconds', 'running', 'isRest'].forEach(
         (k) => {
           state[k] = structuredClone(snap[k]);
         },
@@ -205,8 +200,9 @@
         blue: { score: 0, cautions: 0, hi: 0 },
         lastScorer: null,
         period: 1,
-        seconds: TIME_IN_SECONDS,
+        seconds: PERIOD_SECONDS,
         running: false,
+        isRest: false,
       });
     }
 
@@ -216,7 +212,7 @@
   }
 
   function start() {
-    if (state.running) return;
+    if (state.running || state.isRest) return; // não iniciar se estiver em descanso
     state.running = true;
     state.timerId = setInterval(() => {
       if (state.seconds > 0) {
@@ -237,15 +233,20 @@
 
   function resetTimer() {
     pause();
-    state.seconds = TIME_IN_SECONDS;
+    state.isRest = false;
+    state.seconds = PERIOD_SECONDS;
+    els.status.textContent = '';
     render();
   }
 
   function nextPeriod() {
+    // botão manual para pular direto pro próximo período
     pause();
+    stopShortClock();
+    state.isRest = false;
     if (state.period < 2) {
       state.period++;
-      state.seconds = TIME_IN_SECONDS;
+      state.seconds = PERIOD_SECONDS;
       els.status.textContent = '';
       render();
     }
@@ -254,6 +255,7 @@
   function endPeriod() {
     pause();
     beep(440, 800);
+    stopShortClock();
 
     if (state.period === 2) {
       const winner = decideByCriteria();
@@ -270,7 +272,8 @@
         els.status.textContent = 'Fim da luta.';
       }
     } else {
-      els.status.textContent = 'Fim do período. Avance para o 2º.';
+      els.status.textContent = `Fim do 1º período. Descanso de ${REST_SECONDS}s.`;
+      startRest();
     }
   }
 
@@ -319,9 +322,10 @@
       blue: { score: 0, cautions: 0, hi: 0 },
       lastScorer: null,
       period: 1,
-      seconds: TIME_IN_SECONDS,
+      seconds: PERIOD_SECONDS,
       running: false,
       history: [],
+      isRest: false,
     });
     els.status.textContent = '';
     [els.redScoreBox, els.blueScoreBox].forEach((b) =>
@@ -351,7 +355,33 @@
     }
   }
 
-  // SHORT CLOCK (45s de passividade)
+  // ==== DESCANSO ENTRE PERÍODOS ====
+  function startRest() {
+    state.isRest = true;
+    state.seconds = REST_SECONDS;
+    render();
+    state.running = true;
+    state.timerId = setInterval(() => {
+      if (state.seconds > 0) {
+        state.seconds--;
+        render();
+        if (state.seconds === 0) {
+          endRest();
+        }
+      }
+    }, 1000);
+  }
+
+  function endRest() {
+    pause();
+    state.isRest = false;
+    state.period = 2;
+    state.seconds = PERIOD_SECONDS;
+    els.status.textContent = 'Início do 2º período.';
+    render();
+  }
+
+  // ==== SHORT CLOCK (30s de passividade) ====
   function startShortClock(side) {
     // reinicia se já tiver algum ativo
     stopShortClock();
@@ -397,15 +427,12 @@
   }
 
   function cancelShortClock(side) {
-  // só cancela se o short clock estiver ativo para esse lado
-  if (shortClock.side !== side) return;
-
-  els.status.textContent = `Short clock cancelado para ${
-    side === 'red' ? 'Vermelho' : 'Azul'
-  } pelo árbitro.`;
-
-  stopShortClock();
-}
+    if (shortClock.side !== side) return;
+    els.status.textContent = `Short clock cancelado para ${
+      side === 'red' ? 'Vermelho' : 'Azul'
+    } pelo árbitro.`;
+    stopShortClock();
+  }
 
   // Actions dos botões
   controls.forEach((btn) =>
@@ -417,7 +444,7 @@
       if (act === 'fall') fall(side);
       if (act === 'undoSide') undo();
       if (act === 'shortclock') startShortClock(side);
-       if (act === 'cancelShort') cancelShortClock(side);
+      if (act === 'cancelShort') cancelShortClock(side);
     }),
   );
 
@@ -436,7 +463,7 @@
     }
   };
 
-  // atalhos de teclado (mantidos)
+  // atalhos de teclado
   document.addEventListener('keydown', (e) => {
     const k = e.key.toLowerCase();
     if (k === ' ') {
