@@ -82,6 +82,20 @@ header h1 {
   color: #111;
 }
 
+/* botão menor para short clock */
+.btn-short {
+  padding: 6px 10px;
+  font-size: 12px;
+  grid-column: span 2;
+}
+
+.btn-short-cancel {
+  padding: 6px 10px;
+  font-size: 12px;
+  grid-column: span 2;
+  opacity: 0.9;
+}
+
 .grid {
   display: grid;
   grid-template-columns: 1fr 300px 1fr;
@@ -214,6 +228,7 @@ header h1 {
   text-align: center;
 }
 
+/* vencedor */
 .winner {
   outline: 3px solid var(--win);
   box-shadow: 0 0 0 6px rgba(16, 185, 129, 0.15) inset;
@@ -221,6 +236,11 @@ header h1 {
 
 .super {
   background: linear-gradient(90deg, rgba(16, 185, 129, 0.18), transparent 60%);
+}
+
+/* atleta em passividade (short clock ativo) */
+.panel.passive {
+  box-shadow: 0 0 0 2px var(--warn), 0 10px 30px rgba(0, 0, 0, 0.4);
 }
 
 .footer {

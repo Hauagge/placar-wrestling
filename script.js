@@ -1,5 +1,5 @@
 (function () {
-  const TIME_IN_SECONDS = 180; // 5 minutes
+  const TIME_IN_SECONDS = 300; // 5 minutos
 
   const els = {
     redPoints: document.getElementById('redPoints'),
@@ -16,6 +16,10 @@
     status: document.getElementById('status'),
     redScoreBox: document.getElementById('redScoreBox'),
     blueScoreBox: document.getElementById('blueScoreBox'),
+    redShortClock: document.getElementById('redShortClock'),
+    blueShortClock: document.getElementById('blueShortClock'),
+    redPanel: document.getElementById('redPanel'),
+    bluePanel: document.getElementById('bluePanel'),
   };
 
   const app = document.getElementById('app');
@@ -29,7 +33,14 @@
     seconds: TIME_IN_SECONDS,
     running: false,
     timerId: null,
-    history: [], // stack of actions for undo
+    history: [], // stack de ações para desfazer
+  };
+
+  // short clock (passividade) separado do tempo principal
+  const shortClock = {
+    side: null, // 'red' | 'blue'
+    seconds: 0,
+    timerId: null,
   };
 
   function pad(n) {
@@ -68,7 +79,7 @@
         ? 'Vermelho'
         : '—');
 
-    // Winner highlight / superioridade técnica
+    // superioridade técnica
     const gap = Math.abs(state.red.score - state.blue.score);
     const tech = Number(els.techGap.value || 10);
 
@@ -85,7 +96,35 @@
       els.status.textContent =
         'Vitória por superioridade técnica (diferença ≥ ' + tech + ').';
     } else {
-      els.status.textContent = '';
+      // não limpa status se já tiver alguma mensagem de short clock/luta
+      if (!els.status.textContent.startsWith('Tempo de passividade')) {
+        // só limpa se não for mensagem de short clock
+        if (!els.status.textContent.startsWith('Fim do')) {
+          // mantém mensagens de fim de luta/período
+          els.status.textContent = '';
+        }
+      }
+    }
+
+    // render short clock
+    if (shortClock.side === 'red') {
+      els.redShortClock.textContent = `0:${pad(shortClock.seconds)}`;
+      els.blueShortClock.textContent = '—';
+    } else if (shortClock.side === 'blue') {
+      els.blueShortClock.textContent = `0:${pad(shortClock.seconds)}`;
+      els.redShortClock.textContent = '—';
+    } else {
+      els.redShortClock.textContent = '—';
+      els.blueShortClock.textContent = '—';
+    }
+
+    // destaque visual do atleta em passividade
+    els.redPanel.classList.remove('passive');
+    els.bluePanel.classList.remove('passive');
+    if (shortClock.side === 'red') {
+      els.redPanel.classList.add('passive');
+    } else if (shortClock.side === 'blue') {
+      els.bluePanel.classList.add('passive');
     }
   }
 
@@ -102,6 +141,13 @@
     if (s.score < 0) s.score = 0;
     s.hi = Math.max(s.hi, val);
     state.lastScorer = side;
+
+      if (shortClock.side === side) {
+    els.status.textContent = `Short clock cancelado: ${
+      side === 'red' ? 'Vermelho' : 'Azul'
+    } pontuou durante o tempo de passividade.`;
+    stopShortClock();
+  }
     render();
   }
 
@@ -134,14 +180,14 @@
       els.redScoreBox.classList.remove('winner');
     }
     beep(700, 600);
+    stopShortClock();
   }
 
   function undo() {
     if (!state.history.length) return;
 
-    state.history.pop(); // remove last action record itself
+    state.history.pop(); // remove o último registro
 
-    // Find last snapshot in stack
     const last = [...state.history]
       .reverse()
       .find((h) => JSON.parse(h).snapshot);
@@ -209,7 +255,6 @@
     pause();
     beep(440, 800);
 
-    // Se fim do 2º período, decidir vencedor por critérios se empatado
     if (state.period === 2) {
       const winner = decideByCriteria();
       if (winner) {
@@ -245,7 +290,7 @@
     if (state.lastScorer) {
       return state.lastScorer;
     }
-    return null; // empate absoluto (improvável na prática)
+    return null;
   }
 
   function swapSides() {
@@ -259,6 +304,11 @@
         : state.lastScorer === 'blue'
         ? 'red'
         : null;
+
+    // se tiver short clock ativo, troca de lado também
+    if (shortClock.side === 'red') shortClock.side = 'blue';
+    else if (shortClock.side === 'blue') shortClock.side = 'red';
+
     render();
   }
 
@@ -277,6 +327,7 @@
     [els.redScoreBox, els.blueScoreBox].forEach((b) =>
       b.classList.remove('winner', 'super'),
     );
+    stopShortClock();
     render();
   }
 
@@ -300,7 +351,63 @@
     }
   }
 
-  // Actions
+  // SHORT CLOCK (45s de passividade)
+  function startShortClock(side) {
+    // reinicia se já tiver algum ativo
+    stopShortClock();
+
+    shortClock.side = side;
+    shortClock.seconds = 45;
+    els.status.textContent = `Tempo de passividade iniciado para ${
+      side === 'red' ? 'Vermelho' : 'Azul'
+    } (45s).`;
+    render();
+
+    shortClock.timerId = setInterval(() => {
+      if (shortClock.seconds > 0) {
+        shortClock.seconds--;
+        render();
+        if (shortClock.seconds === 0) {
+          shortClockExpired();
+        }
+      }
+    }, 1000);
+  }
+
+  function stopShortClock() {
+    if (shortClock.timerId) {
+      clearInterval(shortClock.timerId);
+      shortClock.timerId = null;
+    }
+    shortClock.side = null;
+    shortClock.seconds = 0;
+    render();
+  }
+
+  function shortClockExpired() {
+    const side = shortClock.side;
+    if (!side) return;
+
+    const opponent = side === 'red' ? 'blue' : 'red';
+    score(opponent, 1);
+    els.status.textContent = `Tempo de passividade (45s) esgotado: +1 ponto para ${
+      opponent === 'red' ? 'Vermelho' : 'Azul'
+    }.`;
+    stopShortClock();
+  }
+
+  function cancelShortClock(side) {
+  // só cancela se o short clock estiver ativo para esse lado
+  if (shortClock.side !== side) return;
+
+  els.status.textContent = `Short clock cancelado para ${
+    side === 'red' ? 'Vermelho' : 'Azul'
+  } pelo árbitro.`;
+
+  stopShortClock();
+}
+
+  // Actions dos botões
   controls.forEach((btn) =>
     btn.addEventListener('click', (e) => {
       const { act, side, val } = e.currentTarget.dataset;
@@ -309,6 +416,8 @@
       if (act === 'caution') caution(side);
       if (act === 'fall') fall(side);
       if (act === 'undoSide') undo();
+      if (act === 'shortclock') startShortClock(side);
+       if (act === 'cancelShort') cancelShortClock(side);
     }),
   );
 
@@ -327,7 +436,7 @@
     }
   };
 
-  // atalhos de teclado
+  // atalhos de teclado (mantidos)
   document.addEventListener('keydown', (e) => {
     const k = e.key.toLowerCase();
     if (k === ' ') {
